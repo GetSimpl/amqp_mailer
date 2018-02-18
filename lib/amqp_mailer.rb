@@ -13,3 +13,5 @@ module AmqpMailer
     yield(configuration)
   end
 end
+
+require "amqp_mailer/railtie" if defined?(Rails::Railtie)
