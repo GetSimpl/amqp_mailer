@@ -1,0 +1,14 @@
+AllCops:
+  Exclude:
+    - bin/**/*
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  StyleGuideCopsOnly: true
+
+# Disabled because we do not have top-level documentation of classes and modules.
+Style/Documentation:
+  Enabled: false
+
+# TODO: Re-enable later
+Metrics/LineLength:
+  Enabled: false

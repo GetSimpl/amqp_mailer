@@ -18,6 +18,7 @@ module AmqpMailer
 
     private
 
+    # rubocop:disable Metrics/MethodLength
     def payload(mail)
       {
           content: mail.body.raw_source,
@@ -31,5 +32,6 @@ module AmqpMailer
           notification_id: SecureRandom.uuid
       }
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

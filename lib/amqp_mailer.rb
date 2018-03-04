@@ -1,4 +1,4 @@
-require "amqp_mailer/version"
+require 'amqp_mailer/version'
 
 module AmqpMailer
   autoload :DeliveryMethod, 'amqp_mailer/delivery_method'
@@ -14,4 +14,4 @@ module AmqpMailer
   end
 end
 
-require "amqp_mailer/railtie" if defined?(Rails::Railtie)
+require 'amqp_mailer/railtie' if defined?(Rails::Railtie)
