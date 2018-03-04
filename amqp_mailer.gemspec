@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = "Adds a new action mailer delivery method - amqp"
   spec.description   = "This gem adds a new delivery method amqp.
                           This allows for sending email content to another service using amqp message.
-                          And that service is responsible for hanfling email delivery"
+                          And that service is responsible for handling email delivery"
   spec.homepage      = "https://github.com/GetSimpl/amqp_mailer"
   spec.license       = "MIT"
 
