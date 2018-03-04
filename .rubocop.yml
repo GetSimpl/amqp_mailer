@@ -1,6 +1,7 @@
 AllCops:
   Exclude:
     - bin/**/*
+    - vendor/**/*
   DisplayCopNames: true
   DisplayStyleGuide: true
   StyleGuideCopsOnly: true
