@@ -1,8 +1,6 @@
 require 'spec_helper'
 require 'securerandom'
 require 'mail'
-require 'active_support'
-require 'active_support/core_ext'
 
 describe AmqpMailer do
   before(:each) do
