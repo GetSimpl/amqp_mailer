@@ -1,15 +1,18 @@
 require 'mail'
 require 'securerandom'
+require 'amqp_mailer/utils'
 
 module AmqpMailer
   class DeliveryMethod
     DEFAULT_SIMPL_PHONE_NUMBER = '0000000000'
 
+    include AmqpMailer::Utils
+
     class MissingConfiguration < StandardError; end
 
     def initialize(*)
-      raise MissingConfiguration, 'AMQP URL is missing' if AmqpMailer.configuration.amqp_url.blank?
-      raise MissingConfiguration, 'Notifications topic exchange is missing' if AmqpMailer.configuration.notifications_topic_exchange.blank?
+      raise MissingConfiguration, 'AMQP URL is missing' if blank?(AmqpMailer.configuration.amqp_url)
+      raise MissingConfiguration, 'Notifications topic exchange is missing' if blank?(AmqpMailer.configuration.notifications_topic_exchange)
     end
 
     def deliver!(mail)
@@ -26,7 +29,7 @@ module AmqpMailer
           from_name: mail['from'].address_list.addresses.first.name,
           from_email: mail['from'].address_list.addresses.first.address,
           to_email: mail.to.first,
-          phone_number: mail['X-SIMPL-PHONE-NUMBER'].present? ? mail['X-SIMPL-PHONE-NUMBER'].value : DEFAULT_SIMPL_PHONE_NUMBER,
+          phone_number: blank?(mail['X-SIMPL-PHONE-NUMBER']) ? DEFAULT_SIMPL_PHONE_NUMBER : mail['X-SIMPL-PHONE-NUMBER'].value,
           service_id: 'verification-service',
           notification_type: 'email',
           notification_id: SecureRandom.uuid
