@@ -7,7 +7,7 @@ This gem provides an easy way to send emails using notifications service.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'amqp_mailer', git: 'https://github.com/GetSimpl/amqp_mailer.git', tag: 'v0.0.1'
+gem 'amqp_mailer', git: 'https://github.com/GetSimpl/amqp_mailer.git', tag: 'v0.2.0'
 ```
 
 And then execute:
@@ -28,6 +28,7 @@ Configure AmqpMailer by setting required parameters
 AmqpMailer.configure do |config|
   config.amqp_url = ENV['AMQP_URL']
   config.notifications_topic_exchange = ENV['NOTIFICATIONS_TOPIC_EXCHANGE']
+  config.service_id = 'monsters-inc'
 end
 ```
 
