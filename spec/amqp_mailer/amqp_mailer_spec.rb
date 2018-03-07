@@ -10,6 +10,7 @@ describe AmqpMailer do
     AmqpMailer.configure do |config|
       config.amqp_url = 'amqp://boggart'
       config.notifications_topic_exchange = 'quidditch'
+      config.service_id = 'daily-prophet'
     end
   end
 
@@ -28,7 +29,7 @@ describe AmqpMailer do
         from_email: 'severus@hogwarts.edu.uk',
         to_email: 'albus@hogwarts.edu.uk',
         phone_number: '9999999999',
-        service_id: 'verification-service',
+        service_id: 'daily-prophet',
         notification_type: 'email',
         notification_id: @verification_id
     }
@@ -53,7 +54,7 @@ describe AmqpMailer do
           from_email: 'severus@hogwarts.edu.uk',
           to_email: 'albus@hogwarts.edu.uk',
           phone_number: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_PHONE_NUMBER,
-          service_id: 'verification-service',
+          service_id: 'daily-prophet',
           notification_type: 'email',
           notification_id: @verification_id
       }
@@ -81,6 +82,16 @@ describe AmqpMailer do
 
       expect {AmqpMailer::DeliveryMethod.new.deliver!(mail)}.to \
       raise_error(AmqpMailer::DeliveryMethod::MissingConfiguration, 'Notifications topic exchange is missing')
+    end
+  end
+
+  context 'when service_id in missing' do
+    it 'raises error' do
+      AmqpMailer.configuration.service_id = nil
+      mail = Mail::Message.new
+
+      expect {AmqpMailer::DeliveryMethod.new.deliver!(mail)}.to \
+      raise_error(AmqpMailer::DeliveryMethod::MissingConfiguration, 'Sender Service ID is missing')
     end
   end
 end

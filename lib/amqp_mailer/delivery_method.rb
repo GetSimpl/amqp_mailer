@@ -13,6 +13,7 @@ module AmqpMailer
     def initialize(*)
       raise MissingConfiguration, 'AMQP URL is missing' if blank?(AmqpMailer.configuration.amqp_url)
       raise MissingConfiguration, 'Notifications topic exchange is missing' if blank?(AmqpMailer.configuration.notifications_topic_exchange)
+      raise MissingConfiguration, 'Sender Service ID is missing' if blank?(AmqpMailer.configuration.service_id)
     end
 
     def deliver!(mail)
@@ -30,7 +31,7 @@ module AmqpMailer
           from_email: mail['from'].address_list.addresses.first.address,
           to_email: mail.to.first,
           phone_number: blank?(mail['X-SIMPL-PHONE-NUMBER']) ? DEFAULT_SIMPL_PHONE_NUMBER : mail['X-SIMPL-PHONE-NUMBER'].value,
-          service_id: 'verification-service',
+          service_id: AmqpMailer.configuration.service_id,
           notification_type: 'email',
           notification_id: SecureRandom.uuid
       }
