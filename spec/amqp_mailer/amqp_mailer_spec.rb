@@ -4,8 +4,8 @@ require 'mail'
 
 describe AmqpMailer do
   before(:each) do
-    @verification_id = SecureRandom.uuid
-    allow(SecureRandom).to receive(:uuid).and_return(@verification_id)
+    @dummy_notification_id = SecureRandom.uuid
+    allow(SecureRandom).to receive(:uuid).and_return(@dummy_notification_id)
 
     AmqpMailer.configure do |config|
       config.amqp_url = 'amqp://boggart'
@@ -31,7 +31,7 @@ describe AmqpMailer do
         phone_number: '9999999999',
         service_id: 'daily-prophet',
         notification_type: 'email',
-        notification_id: @verification_id
+        notification_id: @dummy_notification_id
     }
 
     expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload)
@@ -56,7 +56,7 @@ describe AmqpMailer do
           phone_number: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_PHONE_NUMBER,
           service_id: 'daily-prophet',
           notification_type: 'email',
-          notification_id: @verification_id
+          notification_id: @dummy_notification_id
       }
 
       expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload)

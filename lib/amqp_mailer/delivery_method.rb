@@ -10,7 +10,10 @@ module AmqpMailer
 
     class MissingConfiguration < StandardError; end
 
+    attr_reader :settings
+
     def initialize(*)
+      @settings = {}
       raise MissingConfiguration, 'AMQP URL is missing' if blank?(AmqpMailer.configuration.amqp_url)
       raise MissingConfiguration, 'Notifications topic exchange is missing' if blank?(AmqpMailer.configuration.notifications_topic_exchange)
       raise MissingConfiguration, 'Sender Service ID is missing' if blank?(AmqpMailer.configuration.service_id)
