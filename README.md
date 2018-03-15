@@ -7,7 +7,7 @@ This gem provides an easy way to send emails using notifications service.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'amqp_mailer', git: 'https://github.com/GetSimpl/amqp_mailer.git', tag: 'v0.2.0'
+gem 'amqp_mailer', git: 'https://github.com/GetSimpl/amqp_mailer.git', tag: '<use latest>'
 ```
 
 And then execute:
