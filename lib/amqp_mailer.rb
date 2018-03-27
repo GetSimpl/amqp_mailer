@@ -1,10 +1,9 @@
 require 'amqp_mailer/version'
+require 'amqp_mailer/delivery_method'
+require 'amqp_mailer/notification_dispatcher'
+require 'amqp_mailer/configuration'
 
 module AmqpMailer
-  autoload :DeliveryMethod, 'amqp_mailer/delivery_method'
-  autoload :NotificationDispatcher, 'amqp_mailer/notification_dispatcher'
-  autoload :Configuration, 'amqp_mailer/configuration'
-
   def self.configuration
     @configration ||= Configuration.new
   end
