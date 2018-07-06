@@ -4,7 +4,7 @@ require 'amqp_mailer/utils'
 
 module AmqpMailer
   class DeliveryMethod
-    DEFAULT_SIMPL_USER_ID = "-"
+    DEFAULT_SIMPL_USER_ID = '-'
     DEFAULT_SIMPL_PHONE_NUMBER = '0000000000'
 
     include AmqpMailer::Utils
