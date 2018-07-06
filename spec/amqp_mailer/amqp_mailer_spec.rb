@@ -20,6 +20,7 @@ describe AmqpMailer do
     mail['to'] = 'albus@hogwarts.edu.uk'
     mail['subject'] = 'The dark lord is back'
     mail['body'] = 'He - who must not be named - is back'
+    mail['X-SIMPL-USER-ID'] = 'some-id'
     mail['X-SIMPL-PHONE-NUMBER'] = '9999999999'
 
     expected_payload = {
@@ -28,6 +29,7 @@ describe AmqpMailer do
         from_name: 'Professor Snape',
         from_email: 'severus@hogwarts.edu.uk',
         to_email: 'albus@hogwarts.edu.uk',
+        user_id: 'some-id',
         phone_number: '9999999999',
         service_id: 'daily-prophet',
         notification_type: 'email',
@@ -53,6 +55,7 @@ describe AmqpMailer do
           from_name: 'Professor Snape',
           from_email: 'severus@hogwarts.edu.uk',
           to_email: 'albus@hogwarts.edu.uk',
+          user_id: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_USER_ID,
           phone_number: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_PHONE_NUMBER,
           service_id: 'daily-prophet',
           notification_type: 'email',

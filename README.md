@@ -35,7 +35,7 @@ end
 Pass phone number in addition to other parameters to `mail()` method of ActionMailer 
 
 ```ruby
-mail(to: 'woody@pixar.com', subject: 'To Infinity and Beyond', 'X-SIMPL-PHONE-NUMBER': phone_number)
+mail(to: 'woody@pixar.com', subject: 'To Infinity and Beyond', 'X-SIMPL-USER-ID': user_id, 'X-SIMPL-PHONE-NUMBER': phone_number)
 ```
 
 #### Gotcha
