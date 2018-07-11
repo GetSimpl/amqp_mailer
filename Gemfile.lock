@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    amqp_mailer (0.2.3)
+    amqp_mailer (0.2.4)
       bunny (>= 2.6.3)
 
 GEM
