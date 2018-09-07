@@ -22,6 +22,7 @@ describe AmqpMailer do
     mail['body'] = 'He - who must not be named - is back'
     mail['X-SIMPL-USER-ID'] = 'some-id'
     mail['X-SIMPL-PHONE-NUMBER'] = '9999999999'
+    mail['use_priority_queue'] = true
 
     expected_payload = {
         content: 'He - who must not be named - is back',
@@ -33,10 +34,10 @@ describe AmqpMailer do
         phone_number: '9999999999',
         service_id: 'daily-prophet',
         notification_type: 'email',
-        notification_id: @dummy_notification_id
+        notification_id: @dummy_notification_id,
     }
 
-    expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload)
+    expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload, true)
 
     AmqpMailer::DeliveryMethod.new.deliver!(mail)
   end
@@ -62,7 +63,7 @@ describe AmqpMailer do
           notification_id: @dummy_notification_id
       }
 
-      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload)
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload, false)
 
       AmqpMailer::DeliveryMethod.new.deliver!(mail)
     end

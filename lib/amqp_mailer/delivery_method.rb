@@ -21,7 +21,7 @@ module AmqpMailer
     end
 
     def deliver!(mail)
-      NotificationDispatcher.new.perform(payload(mail))
+      NotificationDispatcher.new.perform(payload(mail), !!mail['use_priority_queue'])
     end
 
     private
