@@ -17,7 +17,7 @@ describe AmqpMailer do
   it 'sends amqp message using notification dispatcher' do
     mail = Mail::Message.new
     mail['from'] = 'Professor Snape <severus@hogwarts.edu.uk>'
-    mail['to'] = 'albus@hogwarts.edu.uk'
+    mail['to'] = 'A B <albus@hogwarts.edu.uk>'
     mail['subject'] = 'The dark lord is back'
     mail['body'] = 'He - who must not be named - is back'
     mail['X-SIMPL-USER-ID'] = 'some-id'
@@ -29,7 +29,8 @@ describe AmqpMailer do
         subject: 'The dark lord is back',
         from_name: 'Professor Snape',
         from_email: 'severus@hogwarts.edu.uk',
-        to_email: 'albus@hogwarts.edu.uk',
+        to: [{email: "albus@hogwarts.edu.uk", name: "A B"}],
+        preserve_recipients: false,
         user_id: 'some-id',
         phone_number: '9999999999',
         service_id: 'daily-prophet',
@@ -55,7 +56,8 @@ describe AmqpMailer do
           subject: 'The dark lord is back',
           from_name: 'Professor Snape',
           from_email: 'severus@hogwarts.edu.uk',
-          to_email: 'albus@hogwarts.edu.uk',
+          to: [{email: "albus@hogwarts.edu.uk", name: nil}],
+          preserve_recipients: false,
           user_id: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_USER_ID,
           phone_number: AmqpMailer::DeliveryMethod::DEFAULT_SIMPL_PHONE_NUMBER,
           service_id: 'daily-prophet',
@@ -66,6 +68,60 @@ describe AmqpMailer do
       expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload, false)
 
       AmqpMailer::DeliveryMethod.new.deliver!(mail)
+    end
+  end
+
+  context 'for preserve_recipients' do
+    before do
+      @mail = Mail::Message.new
+      @mail['from'] = 'Professor Snape <severus@hogwarts.edu.uk>'
+      @mail['to'] = 'albus@hogwarts.edu.uk'
+      @mail['subject'] = 'The dark lord is back'
+      @mail['body'] = 'He - who must not be named - is back'
+    end
+
+    it 'sets to true when passed as true' do
+      @mail['preserve_recipients'] = true
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(hash_including(preserve_recipients: true), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
+    end
+
+    it 'sets to false when not passed' do
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(hash_including(preserve_recipients: false), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
+    end
+
+    it 'sets to false passed values other than true' do
+      @mail['preserve_recipients'] = 'not true'
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(hash_including(preserve_recipients: false), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
+    end
+  end
+
+  context 'for reply_to' do
+    before do
+      @mail = Mail::Message.new
+      @mail['from'] = 'Professor Snape <severus@hogwarts.edu.uk>'
+      @mail['to'] = 'albus@hogwarts.edu.uk'
+      @mail['subject'] = 'The dark lord is back'
+      @mail['body'] = 'He - who must not be named - is back'
+    end
+
+    it 'sets reply_to when passed' do
+      @mail['reply_to'] = 'reply@getsimpl.com'
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(hash_including(reply_to: 'reply@getsimpl.com'), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
+    end
+
+    it 'sets nothing when not passed' do
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).not_to receive(:perform).with(hash_including(reply_to: anything), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
+    end
+
+    it 'sets to false passed values other than true' do
+      @mail['preserve_recipients'] = 'not true'
+      expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(hash_including(preserve_recipients: false), false)
+      AmqpMailer::DeliveryMethod.new.deliver!(@mail)
     end
   end
 

@@ -28,18 +28,20 @@ module AmqpMailer
 
     # rubocop:disable Metrics/MethodLength
     def payload(mail)
-      {
+      payload = {
           content: mail.body.raw_source,
           subject: mail.subject,
           from_name: mail['from'].address_list.addresses.first.name,
           from_email: mail['from'].address_list.addresses.first.address,
-          to_email: mail.to.first,
+          to: mail['to'].address_list.addresses.collect{|a| {email: a.address, name: a.name}},
+          preserve_recipients: mail['preserve_recipients']  ? mail['preserve_recipients'].value.to_s.downcase == 'true' : false,
           user_id: blank?(mail['X-SIMPL-USER-ID']) ? DEFAULT_SIMPL_USER_ID : mail['X-SIMPL-USER-ID'].value,
           phone_number: blank?(mail['X-SIMPL-PHONE-NUMBER']) ? DEFAULT_SIMPL_PHONE_NUMBER : mail['X-SIMPL-PHONE-NUMBER'].value,
           service_id: AmqpMailer.configuration.service_id,
           notification_type: 'email',
           notification_id: SecureRandom.uuid
       }
+      mail['reply_to'] ? payload.merge(reply_to: mail['reply_to'].value) : payload
     end
     # rubocop:enable Metrics/MethodLength
   end
