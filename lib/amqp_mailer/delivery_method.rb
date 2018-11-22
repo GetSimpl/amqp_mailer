@@ -28,12 +28,14 @@ module AmqpMailer
 
     # rubocop:disable Metrics/MethodLength
     def payload(mail)
+      to_addresses_valid = mail['to'].field.errors.empty?
+      puts "To addresses are invalid #{mail['to']} | #{mail['X-SIMPL-USER-ID'].value} | #{mail.subject} " unless to_addresses_valid
       payload = {
           content: mail.body.raw_source,
           subject: mail.subject,
           from_name: mail['from'].address_list.addresses.first.name,
           from_email: mail['from'].address_list.addresses.first.address,
-          to: mail['to'].address_list.addresses.collect{|a| {email: a.address, name: a.name}},
+          to: to_addresses_valid ? mail['to'].address_list.addresses.collect{|a| {email: a.address, name: a.name}} : [],
           preserve_recipients: mail['preserve_recipients']  ? mail['preserve_recipients'].value.to_s.downcase == 'true' : false,
           user_id: blank?(mail['X-SIMPL-USER-ID']) ? DEFAULT_SIMPL_USER_ID : mail['X-SIMPL-USER-ID'].value,
           phone_number: blank?(mail['X-SIMPL-PHONE-NUMBER']) ? DEFAULT_SIMPL_PHONE_NUMBER : mail['X-SIMPL-PHONE-NUMBER'].value,

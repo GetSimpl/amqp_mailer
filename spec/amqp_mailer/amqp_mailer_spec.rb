@@ -23,13 +23,40 @@ describe AmqpMailer do
     mail['X-SIMPL-USER-ID'] = 'some-id'
     mail['X-SIMPL-PHONE-NUMBER'] = '9999999999'
     mail['use_priority_queue'] = true
-
     expected_payload = {
         content: 'He - who must not be named - is back',
         subject: 'The dark lord is back',
         from_name: 'Professor Snape',
         from_email: 'severus@hogwarts.edu.uk',
         to: [{email: "albus@hogwarts.edu.uk", name: "A B"}],
+        preserve_recipients: false,
+        user_id: 'some-id',
+        phone_number: '9999999999',
+        service_id: 'daily-prophet',
+        notification_type: 'email',
+        notification_id: @dummy_notification_id,
+    }
+
+    expect_any_instance_of(AmqpMailer::NotificationDispatcher).to receive(:perform).with(expected_payload, true)
+
+    AmqpMailer::DeliveryMethod.new.deliver!(mail)
+  end
+
+  it 'handles to email is invalid' do
+    mail = Mail::Message.new
+    mail['from'] = 'Professor Snape <severus@hogwarts.edu.uk>'
+    mail['to'] = 'A B <>'
+    mail['subject'] = 'The dark lord is back'
+    mail['body'] = 'He - who must not be named - is back'
+    mail['X-SIMPL-USER-ID'] = 'some-id'
+    mail['X-SIMPL-PHONE-NUMBER'] = '9999999999'
+    mail['use_priority_queue'] = true
+    expected_payload = {
+        content: 'He - who must not be named - is back',
+        subject: 'The dark lord is back',
+        from_name: 'Professor Snape',
+        from_email: 'severus@hogwarts.edu.uk',
+        to: [],
         preserve_recipients: false,
         user_id: 'some-id',
         phone_number: '9999999999',
