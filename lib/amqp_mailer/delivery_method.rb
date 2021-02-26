@@ -43,7 +43,9 @@ module AmqpMailer
           notification_type: 'email',
           notification_id: SecureRandom.uuid
       }
-      mail['reply_to'] ? payload.merge(reply_to: mail['reply_to'].value) : payload
+      payload.merge!(reply_to: mail['reply_to'].value) if mail['reply_to']
+      payload.merge!(attachments: JSON.parse(mail['attachments'].value)) if mail['attachments']
+      payload
     end
     # rubocop:enable Metrics/MethodLength
   end

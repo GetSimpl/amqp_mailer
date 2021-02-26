@@ -38,6 +38,12 @@ Pass phone number in addition to other parameters to `mail()` method of ActionMa
 mail(to: 'woody@pixar.com', subject: 'To Infinity and Beyond', 'X-SIMPL-USER-ID': user_id, 'X-SIMPL-PHONE-NUMBER': phone_number)
 ```
 
+To send mail with attachment, upload the file to S3 bucket and send the bucket name and object key in mail attachment attributes as JSON
+
+```ruby
+mail(to: 'woody@pixar.com', subject: 'To Infinity and Beyond', 'X-SIMPL-USER-ID': user_id, 'X-SIMPL-PHONE-NUMBER': phone_number, attachments: [{bucket_id: "bucket_name", object_key: "object_key"}].to_json)
+```
+
 #### Gotcha
 
 This doesn't support multipart emails (yet). That is if you have both `<template>.html.erb` and `<template>.text.erb`, remove `<template>.text.erb`.

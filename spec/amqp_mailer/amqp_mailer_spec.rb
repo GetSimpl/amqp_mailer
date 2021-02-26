@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'securerandom'
 require 'mail'
+require 'json'
 
 describe AmqpMailer do
   before(:each) do
@@ -179,6 +180,26 @@ describe AmqpMailer do
 
       expect {AmqpMailer::DeliveryMethod.new.deliver!(mail)}.to \
       raise_error(AmqpMailer::DeliveryMethod::MissingConfiguration, 'Sender Service ID is missing')
+    end
+  end
+
+  context 'when attachments is sent' do
+    it 'should send the attachment in payload' do
+      mail = Mail::Message.new
+      mail['from'] = 'Professor Snape <severus@hogwarts.edu.uk>'
+      mail['to'] = 'albus@hogwarts.edu.uk'
+      mail['subject'] = 'The dark lord is back'
+      mail['body'] = 'He - who must not be named - is back'
+      attachments = [{bucket_id: SecureRandom.hex, object_key: SecureRandom.hex}]
+      mail['attachments'] = attachments.to_json
+      amqp_instance_double = instance_double(AmqpMailer::NotificationDispatcher)
+      expect(AmqpMailer::NotificationDispatcher).to receive(:new).and_return(amqp_instance_double)
+      expect(amqp_instance_double).to receive(:perform){|payload, use_priority_queue|
+        expect(payload[:attachments]).not_to be_nil
+        expect(payload[:attachments]).to eq(JSON.parse(attachments.to_json))
+      }
+
+      AmqpMailer::DeliveryMethod.new.deliver!(mail)
     end
   end
 end
