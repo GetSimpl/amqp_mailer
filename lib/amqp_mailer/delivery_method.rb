@@ -43,7 +43,6 @@ module AmqpMailer
           notification_type: 'email',
           notification_id: SecureRandom.uuid
       }
-      mail['preserve_recipients']  ? mail['preserve_recipients'].value.to_s.downcase == 'true' : false,
       payload.merge!(category: mail['category'].value) if mail['category']
       payload.merge!(critical: mail['critical'].value.to_s.downcase == 'true' ? true : false) if mail['critical']
       payload.merge!(reply_to: mail['reply_to'].value) if mail['reply_to']
