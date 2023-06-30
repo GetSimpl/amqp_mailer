@@ -44,7 +44,7 @@ module AmqpMailer
           notification_id: SecureRandom.uuid
       }
       payload.merge!(category: mail['category'].value) if mail['category']
-      payload.merge!(critical: mail['critical'].value) if mail['critical']
+      payload.merge!(critical: mail['critical'].value.to_s.downcase == 'true' ? true : false) if mail['critical']
       payload.merge!(reply_to: mail['reply_to'].value) if mail['reply_to']
       payload.merge!(attachments: JSON.parse(mail['attachments'].value)) if mail['attachments']
       payload
