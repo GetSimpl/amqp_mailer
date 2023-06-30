@@ -9,7 +9,7 @@ jobs:
       # specify the version you desire here
        - image: cimg/ruby:2.4
 
-    working_directory: ~/repo
+    working_directory: ~/ampq_mailer
 
     steps:
       - checkout
