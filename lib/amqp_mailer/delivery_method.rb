@@ -33,9 +33,9 @@ module AmqpMailer
       payload = {
           content: mail.body.raw_source,
           subject: mail.subject,
-          from_name: mail['from'].addresses.first.name,
-          from_email: mail['from'].addresses.first.address,
-          to: to_addresses_valid ? mail['to'].address_list.addresses.collect{|a| {email: a.address, name: a.name}} : [],
+          from_name: Mail::Address.new(mail['from'].unparsed_value).name,
+          from_email: Mail::Address.new(mail['from'].unparsed_value).address,
+          to: to_addresses_valid ? [{email: Mail::Address.new(mail['to'].unparsed_value).address, name: Mail::Address.new(mail['to'].unparsed_value).name}] : [],
           preserve_recipients: mail['preserve_recipients']  ? mail['preserve_recipients'].value.to_s.downcase == 'true' : false,
           user_id: blank?(mail['X-SIMPL-USER-ID']) ? DEFAULT_SIMPL_USER_ID : mail['X-SIMPL-USER-ID'].value,
           phone_number: blank?(mail['X-SIMPL-PHONE-NUMBER']) ? DEFAULT_SIMPL_PHONE_NUMBER : mail['X-SIMPL-PHONE-NUMBER'].value,
