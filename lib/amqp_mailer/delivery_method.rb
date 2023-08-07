@@ -30,7 +30,6 @@ module AmqpMailer
     def payload(mail)
       to_addresses_valid = mail['to'].field.errors.empty?
       puts "To addresses are invalid #{mail['to']} | #{mail['X-SIMPL-USER-ID'].value} | #{mail.subject} " unless to_addresses_valid
-      binding.pry
       payload = {
           content: mail.body.raw_source,
           subject: mail.subject,
