@@ -60,7 +60,7 @@ PLATFORMS
 DEPENDENCIES
   amqp_mailer!
   bundler (~> 2.4.17)
-  mail (~> 2.8.1)
+  mail (~> 2.5)
   pry
   rake (~> 13.0)
   rspec (~> 3.7)
