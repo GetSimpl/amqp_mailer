@@ -33,10 +33,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'bunny', '>= 2.6.3'
+  spec.add_dependency 'rails', '>= 7.0.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.16'
+
+  spec.add_development_dependency 'bundler', '~> 2.4.17'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.7'
-  spec.add_development_dependency 'mail', '~> 2.5'
+  spec.add_development_dependency 'mail', '~> 2.8.1'
   spec.add_development_dependency 'pry'
 end
